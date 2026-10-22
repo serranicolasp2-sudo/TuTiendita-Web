@@ -1,0 +1,162 @@
+/*
+ * movil.css: versión compacta para celular de las dos webs de Tu Tiendita IA (lo escribió Claude, 05/10/2026).
+ * Solo actúa hasta 640 px de ancho; la versión de escritorio no cambia.
+ * Los !important son necesarios porque los estilos de las páginas están escritos en cada etiqueta.
+ * Referencia: Songfinch (líder del rubro) en móvil: título ~36 px, texto 15-16 px, header de una línea,
+ * botón de compra visible sin hacer scroll. Reglas base: texto 16 px, botones de 44 px como mínimo y sin scroll horizontal.
+ */
+@media (max-width: 640px) {
+  /* ---- tipografía ---- */
+  body > div:first-child { font-size: 16px !important; }
+  section p, section li, section label, section summary, footer, footer a { font-size: 16px !important; line-height: 1.5 !important; }
+  h1 { font-size: 34px !important; line-height: 1.04 !important; letter-spacing: -0.025em !important; }
+  h2 { font-size: 26px !important; line-height: 1.12 !important; }
+  h3 { font-size: 19px !important; line-height: 1.25 !important; }
+  section > div > div > p:first-of-type[style*="font-size: 21px"] { font-size: 17px !important; }
+
+  /* ---- franja de campaña: más finita ---- */
+  body > div:first-child > div:first-child { padding: 8px 16px !important; }
+  body > div:first-child > div:first-child p { font-size: 14px !important; line-height: 1.35 !important; }
+
+  /* ---- encabezado: logo chico y menú en una sola línea deslizable ---- */
+  header { padding: 10px 16px 6px !important; }
+  header > div { gap: 8px !important; }
+  header img { width: 230px !important; }
+  header span[role="img"] { font-size: 32px !important; }
+  header nav { flex-wrap: nowrap !important; overflow-x: auto; gap: 14px !important; width: 100%;
+               margin: 0 -16px !important; padding: 0 16px 4px !important; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  header nav::-webkit-scrollbar { display: none; }
+  header nav a { white-space: nowrap; font-size: 15px !important; min-height: 40px !important;
+                 display: inline-flex !important; align-items: center; }
+  header nav a[href^="/tutienditaia/"] { padding: 0 14px !important; min-height: 40px !important; border-radius: 999px !important; }
+  header nav a[href*="wa.me"] { padding: 0 14px !important; min-height: 40px !important; border-radius: 999px !important; }
+
+  /* ---- secciones: menos aire ---- */
+  section { padding: 32px 16px !important; }
+  section:first-of-type { padding-top: 16px !important; padding-bottom: 32px !important; }
+  section div[style*="max-width: 1120px"] { gap: 18px !important; }
+  section [style*="gap: 56px"], section [style*="gap: 32px"], section [style*="gap: 36px"] { gap: 18px !important; }
+  section [style*="gap: 24px"] { gap: 14px !important; }
+  section ol[style*="grid-template-columns"], section div[style*="grid-template-columns: repeat(auto-fit"] { gap: 14px !important; }
+  footer { margin-top: 24px !important; padding-top: 18px !important; }
+
+  /* ---- pasos (1, 2, 3): número a la izquierda y texto al lado ---- */
+  section ol[style*="grid-template-columns"] > li { display: grid !important; grid-template-columns: 36px 1fr;
+      column-gap: 12px !important; row-gap: 4px !important; padding-top: 12px !important; align-items: start; }
+  section ol[style*="grid-template-columns"] > li > span[style*="border-radius: 50%"] { width: 36px !important; height: 36px !important;
+      font-size: 18px !important; grid-row: span 2; }
+  section ol[style*="grid-template-columns"] > li > :not(span) { grid-column: 2; }
+  section ol[style*="grid-template-columns"] > li h3 { font-size: 18px !important; }
+
+  /* ---- botones grandes, pero no gigantes ---- */
+  a[style*="min-height: 56px"] { min-height: 48px !important; font-size: 17px !important; padding: 0 22px !important; }
+
+  /* ---- imagen del encabezado (funda del disco / antes y después) más baja ---- */
+  section div[style*="aspect-ratio: 1 / 1"] { max-width: 260px; width: 100%; margin: 0 auto; padding: 16px 18px !important; }
+  section div[style*="flex: 0 1 520px"] { padding: 10px !important; }
+  .rf-comp-pie { margin-top: 6px !important; font-size: 13px !important; }
+
+  /* ---- carruseles: productos, ocasiones y muestras se deslizan de costado ---- */
+  .rf-card-grid, .tc-card-grid,
+  section div[style*="minmax(230px"],
+  #muestras div[style*="grid-template-columns"] {
+    display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px !important;
+    margin: 0 -16px 16px !important; padding: 2px 16px 10px !important; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rf-card-grid::-webkit-scrollbar, .tc-card-grid::-webkit-scrollbar,
+  section div[style*="minmax(230px"]::-webkit-scrollbar, #muestras div[style*="grid-template-columns"]::-webkit-scrollbar { display: none; }
+  .rf-card-grid > *, .tc-card-grid > *, section div[style*="minmax(230px"] > *, #muestras div[style*="grid-template-columns"] > * {
+    flex: 0 0 74% !important; scroll-snap-align: start; box-sizing: border-box;
+  }
+  .rf-card, .tc-card { padding: 14px 16px !important; gap: 8px !important; }
+  .rf-card:hover, .tc-card:hover { transform: none; }
+  .rf-card-precio { font-size: 22px !important; }
+  .tc-card-precio { font-size: 24px !important; }
+  section div[style*="minmax(230px"] > div { padding: 14px 16px 18px !important; gap: 10px !important; }
+  #muestras div[style*="grid-template-columns"] > div { padding: 18px !important; }
+  .m-pista { font-size: 13px !important; opacity: .75; margin: -6px 0 10px !important; }
+
+  /* ---- formulario ---- */
+  .rf-form-caja, .tc-form-caja { padding: 18px 14px !important; border-radius: 10px !important; }
+  .form-grupo { margin-bottom: 14px !important; }
+  .form-fila { gap: 0 !important; }
+  .form-grupo input, .form-grupo select, .form-grupo textarea { font-size: 16px !important; padding: 11px 12px !important; }
+  .checkbox-estilos { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 6px !important; }
+  .checkbox-estilo-item { font-size: 14px !important; padding: 8px 6px !important; min-height: 40px; gap: 6px !important;
+                          box-sizing: border-box; display: flex !important; align-items: center; line-height: 1.15 !important; }
+  .form-grupo textarea { min-height: 110px; }
+
+  /* ---- condiciones plegables (movil.js) ---- */
+  .m-plegado { display: none !important; }
+  .m-desplegar { margin-top: 4px; min-height: 44px; padding: 0 18px; border-radius: 6px; border: 2px solid currentColor;
+                 background: transparent; color: inherit; font: 700 16px 'Bricolage Grotesque', 'Arial Narrow', sans-serif; cursor: pointer; }
+
+  /* ---- barra de compra fija abajo (movil.js) ---- */
+  body.m-con-barra { padding-bottom: 76px; }
+  .m-barra { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+             display: flex; gap: 10px; align-items: center; justify-content: space-between; box-shadow: 0 -4px 16px rgba(0,0,0,.12);
+             transform: translateY(110%); transition: transform .2s ease; }
+  .m-barra.m-visible { transform: none; }
+  .m-barra span { font: 600 14px Figtree, 'Segoe UI', sans-serif; line-height: 1.25; }
+  .m-barra a { flex: none; min-height: 46px; display: inline-flex; align-items: center; padding: 0 18px; border-radius: 6px;
+               font: 700 16px 'Bricolage Grotesque', 'Arial Narrow', sans-serif; text-decoration: none; }
+  .m-barra--rf { background: #1A1712; color: #FFFAEB; }
+  .m-barra--rf a { background: #D7301F; color: #FFFFFF; }
+  .m-barra--tc { background: #16205A; color: #FFFFFF; }
+  .m-barra--tc a { background: #E0435C; color: #FFFFFF; }
+}
+@media (max-width: 640px) {
+  /* listas largas en slides (movil.js) */
+  .m-slides { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important;
+              overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px !important;
+              margin: 0 -16px !important; padding: 4px 16px 6px !important; scrollbar-width: none;
+              -webkit-overflow-scrolling: touch; list-style: none; width: 100% !important; }
+  .m-slides::-webkit-scrollbar { display: none; }
+  .m-slides > * { flex: 0 0 84% !important; scroll-snap-align: start; box-sizing: border-box; }
+  ol.m-slides > li { border: 2px solid currentColor !important; border-radius: 10px; padding: 14px !important; }
+  .m-slides--tarjetas > * { border: 2px solid currentColor !important; border-radius: 10px; padding: 16px !important;
+                            margin: 0 !important; min-height: 92px; display: flex !important; align-items: center; }
+  .m-slides + .m-puntos { margin-top: 8px !important; margin-bottom: 4px !important; }
+  .m-puntos { display: flex; justify-content: center; margin-top: -18px !important; margin-bottom: -8px !important; }   /* pegados al carrusel (el contenedor ya deja aire) */
+  .m-puntos button { width: 40px; height: 40px; padding: 0; border: 0; background: none; color: inherit;
+                     display: grid; place-items: center; cursor: pointer; }
+  .m-puntos button::before { content: ""; width: 8px; height: 8px; border-radius: 4px; background: currentColor; opacity: .3;
+                             transition: width .2s ease, opacity .2s ease; }
+  .m-puntos button[aria-current="true"]::before { width: 22px; opacity: 1; }
+  .m-oculto { display: none !important; }
+
+  /* formulario en pasos (movil.js) */
+  .m-paso[hidden] { display: none !important; }
+  .m-pasos-cabecera { order: -1; margin: 0 0 16px; }
+  .m-pasos-barra { display: flex; gap: 6px; }
+  .m-pasos-barra span { flex: 1; height: 6px; border-radius: 3px; background: currentColor; opacity: .18; }
+  .m-pasos-barra span.m-hecho { opacity: 1; }
+  .m-pasos--rf .m-pasos-barra span.m-hecho { background: #D7301F; }
+  .m-pasos--tc .m-pasos-barra span.m-hecho { background: #E0435C; }
+  .m-pasos-titulo { margin: 8px 0 0 !important; font: 700 16px 'Bricolage Grotesque', 'Arial Narrow', sans-serif !important; outline: none; }
+  .m-pasos-error { margin: 8px 0 0 !important; font-weight: 700; color: #D7301F; font-size: 15px !important; }
+  .m-pasos { display: flex; flex-direction: column; }
+  .m-pasos-nav { display: flex; gap: 10px; margin-top: 6px; }
+  .m-pasos-nav button { min-height: 50px; border-radius: 6px; cursor: pointer;
+                        font: 700 17px 'Bricolage Grotesque', 'Arial Narrow', sans-serif; }
+  .m-pasos-nav button[hidden] { display: none; }
+  .m-pasos-nav .m-atras { flex: 0 0 auto; padding: 0 16px; background: transparent; color: inherit; border: 2px solid currentColor; }
+  .m-pasos-nav .m-siguiente { flex: 1; border: 0; color: #FFFFFF; }
+  .m-pasos--rf .m-siguiente { background: #D7301F; }
+  .m-pasos--tc .m-siguiente { background: #E0435C; }
+
+  /* adjuntar fotos: botón grande en vez del control del sistema */
+  input[type="file"] { font-size: 15px !important; width: 100%; padding: 0 !important; border: 0 !important; background: none !important; }
+  input[type="file"]::file-selector-button, input[type="file"]::-webkit-file-upload-button {
+    min-height: 46px; margin-right: 10px; padding: 0 16px; border-radius: 6px; border: 2px solid currentColor;
+    background: #FFFFFF; color: inherit; font: 700 16px 'Bricolage Grotesque', 'Arial Narrow', sans-serif; cursor: pointer; }
+
+  /* links del pie y "volver": más fáciles de tocar */
+  footer a { display: inline-block; padding: 10px 0; }
+  a[href="./"] { display: inline-block; padding: 12px 0; }
+}
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  .m-puntos button::before { transition: none; }
+  .m-barra { transition: none; }
+}

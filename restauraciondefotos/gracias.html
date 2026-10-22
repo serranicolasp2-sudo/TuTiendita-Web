@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estado de tu pedido · Restauración de fotos</title>
+<meta name="theme-color" content="#FFD23F">
+<link rel="icon" href="img/rf-simbolo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400..800&display=swap">
+<style>
+body {
+  margin: 0;
+  background: #FFFAEB;
+  color: #1A1712;
+  font-family: Figtree, 'Segoe UI', system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+a { color: #1A1712; }
+a:hover { color: #D7301F; }
+a:focus-visible { outline: 3px solid #1A1712; outline-offset: 2px; }
+
+header {
+  background: #FFD23F;
+  padding: 20px 24px;
+  border-bottom: 2px solid #1A1712;
+}
+.header-wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.contenido {
+  flex: 1;
+  max-width: 760px;
+  margin: 48px auto;
+  padding: 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.tarjeta-gracias {
+  background: #FFFFFF;
+  border: 3px solid #1A1712;
+  border-radius: 12px;
+  padding: 40px 32px;
+  box-shadow: 6px 6px 0px #1A1712;
+}
+.tarjeta-gracias h1 {
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: clamp(32px, 5vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  line-height: 1.1;
+}
+[data-tienda-gracias] {
+  margin: 24px 0;
+  padding: 20px;
+  background: #FFFAEB;
+  border: 2px solid #1A1712;
+  border-radius: 8px;
+  font-size: 19px;
+  line-height: 1.5;
+}
+[data-tienda-gracias] p:first-child {
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 8px;
+  color: #D7301F;
+}
+[data-tienda-gracias] p:last-child {
+  margin: 0;
+  font-size: 17px;
+  color: #1A1712;
+}
+[data-tienda-gracias][data-estado="pagado"] {
+  border-color: #2E7D32;
+  background: #E8F5E9;
+}
+[data-tienda-gracias][data-estado="pagado"] p:first-child {
+  color: #2E7D32;
+}
+[data-tienda-gracias][data-estado="cancelado"] {
+  border-color: #C62828;
+  background: #FFEBEE;
+}
+.pasos-siguientes {
+  margin-top: 28px;
+  border-top: 2px dashed #1A1712;
+  padding-top: 24px;
+}
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 26px;
+  font-size: 18px;
+  border-radius: 6px;
+  background: #1A1712;
+  color: #FFD23F;
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease;
+  margin-top: 12px;
+}
+.btn-whatsapp:hover {
+  background: #D7301F;
+  color: #FFFFFF;
+}
+footer {
+  background: #1A1712;
+  color: #FFFAEB;
+  padding: 24px;
+  text-align: center;
+  font-size: 15px;
+  margin-top: auto;
+}
+
+/* ¿No pudiste realizar la compra? (reintento con Mercado Pago o transferencia; lo arma tienda.js) */
+.tienda-alternativa {
+  margin: 24px 0 0;
+  padding: 24px 20px;
+  background: #FFFFFF;
+  border: 3px solid #D7301F;
+  border-radius: 12px;
+}
+.tienda-alternativa h2 {
+  margin: 0 0 8px;
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #1A1712;
+}
+.tienda-alternativa p { margin: 0 0 16px; font-size: 17px; color: #1A1712; }
+.tienda-alternativa .tienda-nota { font-size: 15px; color: #5A5345; }
+.tienda-reintentar {
+  display: inline-flex; align-items: center; min-height: 52px; padding: 0 22px; margin-bottom: 20px;
+  border: 0; border-radius: 6px; background: #FFD23F; color: #1A1712;
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer;
+}
+.tienda-reintentar:disabled { opacity: 0.6; cursor: wait; }
+.tienda-transferencia { margin: 0 0 12px; padding: 16px; background: #FFFAEB; border: 2px solid #1A1712; border-radius: 8px; }
+.tienda-transferencia div { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding: 6px 0; }
+.tienda-transferencia dt { min-width: 64px; font-weight: 700; color: #5A5345; }
+.tienda-transferencia dd { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 18px;
+  font-weight: 700; color: #1A1712; word-break: break-all; }
+.tienda-copiar { min-height: 40px; padding: 0 14px; border: 2px solid #1A1712; border-radius: 6px; background: transparent;
+  color: #1A1712; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+@media (max-width: 480px) {
+  .contenido { margin: 28px auto; padding: 0 14px; }
+  .tarjeta-gracias { padding: 28px 18px; }
+  .tienda-alternativa { padding: 18px 14px; }
+  .tienda-transferencia { padding: 12px; }
+  .tienda-transferencia dd { font-size: 16px; }
+}
+</style>
+<script src="/tutienditaia/tienda.js" defer></script>
+<link rel="stylesheet" href="/tutienditaia/movil.css">
+</head>
+<body>
+
+<header>
+<div class="header-wrap">
+  <a href="./" style="display: inline-block"><img src="img/rf-logo.svg" alt="Restauración de fotos" style="height: 36px; width: auto"></a>
+  <a href="./" style="font-weight: 700; text-decoration: none; font-size: 16px">← Volver a la web</a>
+</div>
+</header>
+
+<main class="contenido">
+  <div class="tarjeta-gracias">
+    <h1>¡Muchas gracias por tu pedido!</h1>
+    <p style="margin: 0; font-size: 18px; color: #5A5345">Acá podés seguir en tiempo real la confirmación de tu compra:</p>
+    
+    <div data-tienda-gracias>
+      <p>Consultando el estado de tu pedido…</p>
+    </div>
+
+    <div class="pasos-siguientes">
+      <h3 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 20px; font-weight: 700">¿Qué pasa ahora?</h3>
+      <p style="margin: 0 0 16px; font-size: 16px">
+        Una vez acreditado el pago, tu pedido entra en producción. Te mandaremos un mail con el comprobante y en menos de 2 horas te escribiremos por WhatsApp para compartirte la vista previa.
+      </p>
+      <p style="margin: 0 0 12px; font-size: 16px; font-weight: 600">
+        ¿Tenés alguna consulta o querés avisarnos algo sobre tus fotos?
+      </p>
+      <a class="btn-whatsapp" href="https://wa.me/5491155069569?text=Hola%2C%20tengo%20una%20consulta%20sobre%20mi%20pedido%20de%20Restauraci%C3%B3n%20de%20Fotos" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Restauración de fotos · Sarandí, Avellaneda · <a href="https://tucancion.com.ar/" style="color: #FFD23F">¿Y una canción con su historia? tucancion.com.ar</a>
+</footer>
+
+</body>
+</html>

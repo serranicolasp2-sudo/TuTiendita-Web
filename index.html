@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tu Tiendita IA · Regalos que emocionan</title>
+<meta name="description" content="Tu Tiendita IA: Canciones a medida con tu historia y restauración de fotos antiguas con cuadros a domicilio.">
+<meta name="theme-color" content="#16205A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400..800&display=swap">
+<style>
+body {
+  margin: 0;
+  background: #F6F7FA;
+  color: #16205A;
+  font-family: Figtree, 'Segoe UI', system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+a { color: inherit; text-decoration: none; }
+a:focus-visible { outline: 3px solid #16205A; outline-offset: 3px; }
+
+header {
+  background: #16205A;
+  color: #FFFFFF;
+  padding: 36px 24px;
+  text-align: center;
+}
+.header-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+}
+h1 {
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: clamp(36px, 6vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 12px;
+  line-height: 1.05;
+}
+.subtitulo {
+  font-size: clamp(18px, 2.5vw, 22px);
+  color: #C9D3FF;
+  margin: 0 auto;
+  max-width: 32em;
+}
+
+main {
+  flex: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 56px 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.grid-tiendas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));   /* en 320 px no se desborda */
+  gap: 32px;
+}
+
+.tarjeta-tienda {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 8px 24px rgba(22,32,90,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.tarjeta-tienda:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(22,32,90,0.12);
+}
+
+.tienda-tc {
+  border: 3px solid #1E3C96;
+}
+.tienda-rf {
+  border: 3px solid #1A1712;
+}
+
+.etiqueta-lado {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.lado-a {
+  background: #1E3C96;
+  color: #FFFFFF;
+}
+.lado-b {
+  background: #FFD23F;
+  color: #1A1712;
+}
+
+.tarjeta-tienda h2 {
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  line-height: 1.1;
+}
+
+.tarjeta-tienda p {
+  font-size: 18px;
+  color: #5F6679;
+  margin: 0 0 20px;
+}
+
+.precio-desde {
+  font-size: 17px;
+  font-weight: 600;
+  color: #16205A;
+  margin-bottom: 24px;
+}
+.precio-desde b {
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.btn-entrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 0 28px;
+  font-size: 20px;
+  border-radius: 8px;
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.btn-tc {
+  background: #E0435C;
+  color: #FFFFFF;
+}
+.btn-tc:hover {
+  background: #c9364e;
+}
+.btn-rf {
+  background: #D7301F;
+  color: #FFFFFF;
+}
+.btn-rf:hover {
+  background: #ba2313;
+}
+
+footer {
+  background: #16205A;
+  color: #C9D3FF;
+  padding: 28px 24px;
+  text-align: center;
+  font-size: 16px;
+  margin-top: auto;
+}
+footer a {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="header-wrap">
+  <h1>Tu Tiendita IA</h1>
+  <p class="subtitulo">Regalos únicos y personalizados. Hechos con tecnología de inteligencia artificial y revisados con dedicación.</p>
+</div>
+</header>
+
+<main>
+<div class="grid-tiendas">
+
+  <!-- Tienda Tu Canción -->
+  <div class="tarjeta-tienda tienda-tc">
+    <div>
+      <span class="etiqueta-lado lado-a">Lado A · Canciones</span>
+      <h2>Tu Canción</h2>
+      <p>Contanos dos o tres recuerdos de esa persona y en menos de 48 horas tenés una canción original con su nombre y su historia, lista para regalar. Hasta 5 cambios incluidos.</p>
+      <div class="precio-desde" style="color: #1E3C96">
+        Desde <b data-precio="tc-cancion">$26.999</b> · Combo con video <span data-precio="tc-combo">$59.999</span>
+      </div>
+    </div>
+    <a class="btn-entrar btn-tc" href="tucancion/">Entrar a Tu Canción →</a>
+  </div>
+
+  <!-- Tienda Restauración de Fotos -->
+  <div class="tarjeta-tienda tienda-rf">
+    <div>
+      <span class="etiqueta-lado lado-b">Lado B · Fotos & Cuadros</span>
+      <h2>Restauración de fotos</h2>
+      <p>Esa foto de siempre, como nueva. Sacamos manchas, roturas y dobleces, pasamos a color y enviamos archivos en alta calidad o cuadros listos para colgar.</p>
+      <div class="precio-desde" style="color: #1A1712">
+        Desde <b data-precio="rf-foto-1">$4.999</b> · Cuadros con envío desde <span data-cuadros-desde>$24.999</span>
+      </div>
+    </div>
+    <a class="btn-entrar btn-rf" href="restauraciondefotos/">Entrar a Restauración de fotos →</a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <p style="margin: 0 0 8px">¿Dudas o pedidos especiales? Escribinos por <a href="https://wa.me/5491155069569" target="_blank" rel="noopener">WhatsApp al 11 5506-9569</a></p>
+  <p style="margin: 0; font-size: 14px; opacity: 0.8">Sarandí, Avellaneda · Tu Tiendita IA</p>
+</footer>
+
+<script src="tienda.js" defer></script>
+<script>
+/* Precio "desde" de los cuadros: lo ajusta solo el vigilante de proveedores en el servidor */
+window.addEventListener("DOMContentLoaded", function () {
+  var API = (window.TIENDA_API || "/tutienditaia/api").replace(/\/$/, "");
+  fetch(API + "/catalogo?marca=rf").then(function (r) { return r.ok ? r.json() : null; }).then(function (c) {
+    if (!c) return;
+    var precios = c.productos.filter(function (p) { return p.envio; }).map(function (p) { return p.precio; });
+    var el = document.querySelector("[data-cuadros-desde]");
+    if (el && precios.length) el.textContent = "$" + Math.min.apply(null, precios).toLocaleString("es-AR");
+  }).catch(function () {});
+});
+</script>
+</body>
+</html>

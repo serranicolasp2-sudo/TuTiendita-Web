@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Restauración de fotos antiguas</title>
+<meta name="description" content="Restauración de fotos antiguas: sacamos manchas, roturas y dobleces, y la pasamos a color. Vista previa en menos de 2 horas.">
+<meta property="og:title" content="Restauración de fotos: esa foto de siempre, como nueva">
+<meta property="og:description" content="Restauración de fotos antiguas: sacamos manchas, roturas y dobleces, y la pasamos a color. Vista previa en menos de 2 horas.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://restauraciondefotos.com.ar/">
+<meta name="theme-color" content="#FFD23F">
+<link rel="icon" href="img/rf-simbolo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Figtree:wght@400..800&family=Reenie+Beanie&display=swap">
+<style>
+body{margin:0}
+a{color:#1A1712}a:hover{color:#D7301F}
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #1A1712;
+  outline-offset: 2px;
+}
+
+[hidden] { display: none !important; }   /* que hidden gane a display:flex de .form-grupo */
+.modos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.modo { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 8px; border: 2px solid #1A1712;
+  border-radius: 8px; background: #FFFFFF; cursor: pointer; }
+.modo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; }
+.modo b { display: block; font-size: 16px; color: #1A1712; }
+.modo .modo-txt { display: block; font-size: 14px; line-height: 1.35; font-weight: 400; color: #5A5345; }
+.modo input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.modo:has(input:checked) { border: 3px solid #D7301F; background: #FFFAEB; }
+.modo:has(input:focus-visible) { outline: 3px solid #1A1712; outline-offset: 2px; }
+fieldset:disabled .modo { opacity: 0.5; cursor: default; }
+@media (max-width: 640px) {
+  .modos { grid-template-columns: 1fr; gap: 8px; }
+  .modo { flex-direction: row; align-items: center; gap: 12px; }
+  .modo img { width: 96px; flex: 0 0 96px; }
+}
+.rf-marcos { display: grid; grid-template-columns: repeat(2, minmax(0, 150px)); gap: 12px; }
+.rf-marco {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border: 2px solid #1A1712;
+  border-radius: 8px;
+  background: #FFFFFF;
+  cursor: pointer;
+  font-weight: 700;
+  text-align: center;
+}
+.rf-marco img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 4px; }
+.rf-marco input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.rf-marco:has(input:checked) { border: 3px solid #D7301F; background: #FFFAEB; }
+.rf-marco:has(input:focus-visible) { outline: 3px solid #1A1712; outline-offset: 2px; }
+.rf-galeria {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 0 20px;
+}
+.rf-galeria figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.rf-galeria img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 2px solid #1A1712;
+  border-radius: 8px;
+  background: #EDE6D6;
+}
+.rf-galeria figcaption { font-size: 15px; line-height: 1.4; color: #5A5345; }
+.rf-galeria figcaption b { display: block; font-size: 17px; color: #1A1712; }
+@media (max-width: 640px) {
+  .rf-galeria {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 16px;
+    gap: 12px;
+    margin: 0 -16px 16px;
+    padding: 0 16px 4px;
+    scrollbar-width: none;
+  }
+  .rf-galeria::-webkit-scrollbar { display: none; }
+  .rf-galeria figure { flex: 0 0 62%; scroll-snap-align: start; }
+}
+.rf-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.rf-card {
+  background: #FFFFFF;
+  border: 2px solid #1A1712;
+  border-radius: 8px;
+  padding: 18px 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.15s ease;
+  position: relative;
+}
+.rf-card:hover {
+  border-color: #D7301F;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26,23,18,0.08);
+}
+.rf-card.seleccionado {
+  border: 3px solid #D7301F;
+  background: #FFFAEB;
+}
+.rf-card-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #1A1712;
+  color: #FFD23F;
+}
+.rf-card-precio {
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1A1712;
+}
+.rf-card.destacado .rf-card-precio {
+  color: #D7301F;
+}
+.rf-form-caja {
+  background: #FFFFFF;
+  border: 2px solid #1A1712;
+  border-radius: 12px;
+  padding: 28px;
+}
+.form-grupo {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-grupo label {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1A1712;
+}
+.form-grupo input[type="text"],
+.form-grupo input[type="email"],
+.form-grupo input[type="tel"],
+.form-grupo input[type="url"],
+.form-grupo select,
+.form-grupo textarea {
+  font-family: inherit;
+  font-size: 16px;
+  padding: 12px 14px;
+  border: 2px solid #1A1712;
+  border-radius: 6px;
+  background: #FFFAEB;
+  color: #1A1712;
+  box-sizing: border-box;
+  width: 100%;
+}
+.form-grupo input:focus,
+.form-grupo select:focus,
+.form-grupo textarea:focus {
+  border-color: #D7301F;
+  background: #FFFFFF;
+  outline: none;
+}
+.form-fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+[aria-invalid="true"] {
+  border-color: #D7301F !important;
+  box-shadow: 0 0 0 3px rgba(215, 48, 31, 0.25) !important;
+}
+p[data-tienda-error] {
+  background: #FDE8E8;
+  border: 2px solid #F8B4B4;
+  color: #9B1C1C;
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-weight: 700;
+  margin: 16px 0;
+}
+progress[data-tienda-progreso] {
+  width: 100%;
+  height: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  accent-color: #D7301F;
+}
+.boton-mp {
+  background: #D7301F;
+  color: #FFFFFF;
+  font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  border: none;
+  border-radius: 6px;
+  padding: 18px 32px;
+  cursor: pointer;
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.15s ease;
+}
+.boton-mp:hover:not(:disabled) {
+  background: #ba2313;
+}
+.boton-mp:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.texto-mp {
+  display: block;
+  text-align: center;
+  color: #5A5345;
+  font-size: 14px;
+  margin-top: 8px;
+}
+.previews-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+.preview-item {
+  width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.preview-item img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid #1A1712;
+}
+.preview-item span {
+  font-size: 11px;
+  color: #5A5345;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+}
+.preview-contador {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1A1712;
+  margin-top: 6px;
+}
+.checkbox-estilos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.checkbox-estilo-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFAEB;
+  border: 1px solid #1A1712;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.checkbox-estilo-item input {
+  accent-color: #D7301F;
+  width: 16px;
+  height: 16px;
+}
+.seccion-borde {
+  border-top: 2px dashed #1A1712;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+/* Comparador antes / después (Claude) */
+.rf-comp{position:relative;aspect-ratio:1200/806;border-radius:4px;overflow:hidden;--corte:50%;background:#C9BFB4}
+.rf-comp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.rf-comp .rf-comp-antes{clip-path:inset(0 calc(100% - var(--corte)) 0 0)}
+.rf-comp-linea{position:absolute;top:0;bottom:0;left:var(--corte);width:3px;margin-left:-1.5px;background:#FFD23F;pointer-events:none}
+.rf-comp-linea::after{content:"";position:absolute;top:50%;left:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
+  background:#FFD23F;border:3px solid #1A1712;box-sizing:border-box}
+.rf-comp input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}
+.rf-comp input:focus-visible + .rf-comp-linea::after{outline:3px solid #D7301F;outline-offset:2px}
+.rf-comp-tag{position:absolute;bottom:10px;font-family:'Bricolage Grotesque','Arial Narrow',sans-serif;font-weight:700;font-size:14px;
+  line-height:1;padding:7px 10px;border-radius:4px;pointer-events:none}
+.rf-comp-pie{margin:10px 0 0;color:#FFFAEB;font-size:14px;text-align:center}
+</style>
+<script src="/tutienditaia/tienda.js" defer></script>
+<link rel="stylesheet" href="/tutienditaia/movil.css">
+<script src="/tutienditaia/movil.js?v=20261015" defer></script>
+</head>
+<body>
+<div style="background: #FFFAEB; color: #1A1712; font-family: Figtree, 'Segoe UI', system-ui, sans-serif; font-size: 18px; line-height: 1.5">
+
+<div style="background: #1A1712; color: #FFD23F; padding: 12px 24px">
+<p style="max-width: 1120px; margin: 0 auto; margin-top: 0; margin-bottom: 0; font-size: 19px; font-weight: 700">Día de la Madre: devolvele esa foto. La vista previa te llega en menos de 2 horas.</p>
+</div>
+
+<header style="background: #FFD23F; padding: 22px 24px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px">
+<img src="img/rf-logo.svg" alt="Restauración de fotos" style="width: 300px; max-width: 100%; height: auto">
+<nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px">
+<a href="#incluye" style="font-weight: 600; text-decoration: none">Qué incluye</a>
+<a href="#precios" style="font-weight: 600; text-decoration: none">Precios y encargo</a>
+<a href="#condiciones" style="font-weight: 600; text-decoration: none">Condiciones</a>
+<a href="https://tucancion.com.ar/" style="font-weight: 700; text-decoration: none; background: #1E3C96; color: #FFFFFF; padding: 8px 14px; border-radius: 999px; white-space: nowrap">Lado A: canciones</a>
+<a href="https://wa.me/5491155069569?text=Hola%2C%20quiero%20restaurar%20una%20foto" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; font-size: 17px; border-radius: 6px; background: #1A1712; color: #FFD23F; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 700; text-decoration: none">WhatsApp</a>
+</nav>
+</div>
+</header>
+
+<section style="background: #FFD23F; padding: 40px 24px 96px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 56px 64px">
+<div style="flex: 1.3 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 24px; align-items: flex-start">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(46px, 6.4vw, 84px); font-weight: 800; letter-spacing: -0.03em; line-height: 0.98">Esa foto de siempre, como nueva.</h1>
+<p style="margin: 0; font-size: 21px; line-height: 1.45; max-width: 34em">Sacale una foto con el celular o escaneala. Le quitamos manchas, roturas y dobleces, y si es en blanco y negro la pasamos a color. En menos de 2 horas ves cómo quedó.</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px">
+<a href="#precios" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 30px; font-size: 20px; border-radius: 6px; background: #D7301F; color: #FFFFFF; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 700; text-decoration: none">Pedir restauración online</a>
+<span style="font-size: 18px"><b data-precio="rf-foto-1" style="font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -0.02em">$4.999</b> por foto · Packs desde <span data-precio="rf-pack-5">$14.999</span></span>
+</div>
+<p style="margin: 0; font-size: 17px; font-weight: 600; border-top: 2px solid #1A1712; padding-top: 16px">Para regalarla enmarcada, para compartirla con la familia o para volver a colgarla en la pared.</p>
+</div>
+<div style="flex: 0 1 520px; min-width: 0; background: #1A1712; border-radius: 12px; padding: 16px; box-sizing: border-box; position: relative">
+<div class="rf-comp">
+<img src="img/muestra-despues.jpg" alt="La misma foto restaurada y coloreada" width="1200" height="806">
+<img class="rf-comp-antes" src="img/muestra-antes.jpg" alt="Foto original de un cumpleaños infantil, en blanco y negro, con manchas y desgaste" width="1200" height="806">
+<input type="range" min="0" max="100" value="50" aria-label="Deslizá para comparar la foto original con la restaurada">
+<span class="rf-comp-linea" aria-hidden="true"></span>
+<span class="rf-comp-tag" style="left: 10px; background: #FFFAEB">Antes</span>
+<span class="rf-comp-tag" style="right: 10px; background: #FFD23F">Después</span>
+</div>
+<span style="position: absolute; left: 6px; top: 6px; border-left: 6px solid #D7301F; border-top: 6px solid #D7301F; width: 26px; height: 26px"></span>
+<span style="position: absolute; right: 6px; bottom: 6px; border-right: 6px solid #D7301F; border-bottom: 6px solid #D7301F; width: 26px; height: 26px"></span>
+<p class="rf-comp-pie">Deslizá para ver el antes y el después</p>
+</div>
+<script>
+document.querySelectorAll(".rf-comp input").forEach(function (r) {
+  r.addEventListener("input", function () { r.parentNode.style.setProperty("--corte", r.value + "%"); });
+});
+</script>
+</div>
+</section>
+
+<section style="padding: 88px 24px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(34px, 4.8vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.02; color: #1A1712">Así se pide</h2>
+<ol style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px">
+<li style="display: flex; flex-direction: column; gap: 12px; border-top: 2px solid #1A1712; padding-top: 20px">
+<span style="width: 52px; height: 52px; border-radius: 50%; background: #1A1712; color: #FFD23F; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 28px; font-weight: 800">1</span>
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15">Elegí tu producto y adjuntá tus fotos</h3>
+<p style="margin: 0">Seleccioná fotos digitales o cuadros listos para colgar. Podés subir las fotos directo desde tu celular o computadora.</p>
+</li>
+<li style="display: flex; flex-direction: column; gap: 12px; border-top: 2px solid #1A1712; padding-top: 20px">
+<span style="width: 52px; height: 52px; border-radius: 50%; background: #1A1712; color: #FFD23F; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 28px; font-weight: 800">2</span>
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15">Mirá la vista previa</h3>
+<p style="margin: 0">En menos de 2 horas te mandamos la foto restaurada con marca de agua, para que la veas antes de la entrega final.</p>
+</li>
+<li style="display: flex; flex-direction: column; gap: 12px; border-top: 2px solid #1A1712; padding-top: 20px">
+<span style="width: 52px; height: 52px; border-radius: 50%; background: #1A1712; color: #FFD23F; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 28px; font-weight: 800">3</span>
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15">Recibila en alta calidad</h3>
+<p style="margin: 0">Tenés 1 corrección incluida. Recibís el archivo digital en alta resolución o el cuadro en tu domicilio por correo.</p>
+</li>
+</ol>
+</div>
+</section>
+
+<section id="incluye" style="background: #FFD23F; color: #1A1712; padding: 72px 24px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(34px, 4.8vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.02">Qué incluye</h2>
+<ul class="m-slides m-slides--tarjetas" style="margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 20px 24px">
+<li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; border-top: 2px solid #1A1712; padding-top: 14px; font-size: 17px; line-height: 1.45"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sacamos manchas, roturas, rayones y dobleces.</span></li>
+<li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; border-top: 2px solid #1A1712; padding-top: 14px; font-size: 17px; line-height: 1.45"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Color incluido, si la foto es en blanco y negro y la querés a color.</span></li>
+<li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; border-top: 2px solid #1A1712; padding-top: 14px; font-size: 17px; line-height: 1.45"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Respetamos las caras: si la restauración cambia los rasgos, la descartamos y la hacemos de nuevo.</span></li>
+<li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; border-top: 2px solid #1A1712; padding-top: 14px; font-size: 17px; line-height: 1.45"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Vista previa antes de la entrega y una corrección incluida.</span></li>
+<li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; border-top: 2px solid #1A1712; padding-top: 14px; font-size: 17px; line-height: 1.45"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>¿La querés en cuadro? Enmarcada o en bastidor, te llega directo a tu casa.</span></li>
+</ul>
+</div>
+</section>
+
+<!-- SECCIÓN POR QUÉ NOSOTROS (y no una IA sola) -->
+<section id="por-que" style="padding: 88px 24px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(34px, 4.8vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.02; color: #1A1712">¿No la puedo arreglar yo con una IA?</h2>
+<p style="margin: 0; max-width: 40em">Podés probar. Trabajamos con IA todos los días (ya publicamos más de 100 canciones hechas con ella) y conocemos sus mañas. Esto es lo que hacemos distinto:</p>
+</div>
+<div class="m-slides" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px">
+<div style="background: #FFFFFF; border: 2px solid #1A1712; border-radius: 12px; padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; color: #1A1712">La abuela sigue siendo la abuela</h3>
+<p style="margin: 0; font-size: 17px">Las IA tienden a rejuvenecer, maquillar o cambiar rasgos. Les prohibimos tocar las caras, y si alguien no queda igual, la corregimos mirando tu foto original.</p>
+</div>
+<div style="background: #FFFFFF; border: 2px solid #1A1712; border-radius: 12px; padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; color: #1A1712">Primero la estudiamos</h3>
+<p style="margin: 0; font-size: 17px">Antes de tocarla, la analizamos entera y ampliada por partes: la época, el papel y cada daño. Se arregla solo lo dañado, sin inventar.</p>
+</div>
+<div style="background: #FFFFFF; border: 2px solid #1A1712; border-radius: 12px; padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; color: #1A1712">Colores investigados</h3>
+<p style="margin: 0; font-size: 17px">Lo que tiene un color comprobable (un uniforme, un auto, un envase, un cartel) se busca en fuentes de la época. Y si nos contás que el vestido era celeste, va celeste.</p>
+</div>
+<div style="background: #FFFFFF; border: 2px solid #1A1712; border-radius: 12px; padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 10px">
+<h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; color: #1A1712">Lista para imprimir</h3>
+<p style="margin: 0; font-size: 17px">Las apps suelen devolver imágenes chicas, para ver en el celular. La tuya sale en alta resolución, para imprimir hasta 30x40 cm, y si querés te llega enmarcada.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECCIÓN DE PRECIOS Y FORMULARIO DE COMPRA -->
+<section id="precios" style="padding: 88px 24px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px">
+<div>
+<h2 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(34px, 4.8vw, 52px); font-weight: 800; letter-spacing: -0.02em; color: #1A1712">Precios y encargo</h2>
+<p style="margin: 0; font-size: 20px; max-width: 42em">Elegí una opción para abrir su formulario. Pagás seguro por Mercado Pago y empezamos tu restauración al instante.</p>
+</div>
+
+<!-- Categoría: Fotos digitales -->
+<div>
+<h3 style="margin: 0 0 16px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 24px; font-weight: 700; color: #1A1712">1. Fotos digitales en alta calidad (vista previa en menos de 2 h)</h3>
+<div class="rf-card-grid">
+  <div class="rf-card seleccionado" data-prod-id="rf-foto-1" tabindex="0" role="button" aria-pressed="true">
+    <div>
+      <span class="rf-card-badge">Digital</span>
+      <h4 style="margin: 8px 0 4px; font-size: 20px; font-weight: 700">1 foto</h4>
+      <p style="margin: 0; font-size: 14px; color: #5A5345">Archivo digital restaurado en alta resolución.</p>
+    </div>
+    <div class="rf-card-precio" data-precio="rf-foto-1">$4.999</div>
+  </div>
+  <div class="rf-card" data-prod-id="rf-pack-5" tabindex="0" role="button" aria-pressed="false">
+    <div>
+      <span class="rf-card-badge">Pack x5</span>
+      <h4 style="margin: 8px 0 4px; font-size: 20px; font-weight: 700">5 fotos</h4>
+      <p style="margin: 0; font-size: 14px; color: #5A5345"><span data-precio="rf-pack-5" data-por-foto="5">$3.000</span> por foto · Hasta 5 fotos.</p>
+    </div>
+    <div class="rf-card-precio" data-precio="rf-pack-5">$14.999</div>
+  </div>
+  <div class="rf-card" data-prod-id="rf-pack-10" tabindex="0" role="button" aria-pressed="false">
+    <div>
+      <span class="rf-card-badge">Pack x10</span>
+      <h4 style="margin: 8px 0 4px; font-size: 20px; font-weight: 700">10 fotos</h4>
+      <p style="margin: 0; font-size: 14px; color: #5A5345"><span data-precio="rf-pack-10" data-por-foto="10">$2.500</span> por foto · Hasta 10 fotos.</p>
+    </div>
+    <div class="rf-card-precio" data-precio="rf-pack-10">$24.999</div>
+  </div>
+  <div class="rf-card" data-prod-id="rf-pack-20" tabindex="0" role="button" aria-pressed="false">
+    <div>
+      <span class="rf-card-badge">Pack x20</span>
+      <h4 style="margin: 8px 0 4px; font-size: 20px; font-weight: 700">20 fotos</h4>
+      <p style="margin: 0; font-size: 14px; color: #5A5345"><span data-precio="rf-pack-20" data-por-foto="20">$2.000</span> por foto · Hasta 20 fotos.</p>
+    </div>
+    <div class="rf-card-precio" data-precio="rf-pack-20">$39.999</div>
+  </div>
+</div>
+</div>
+
+<!-- Categoría: Cuadros físicos -->
+<div>
+<h3 style="margin: 0 0 16px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 24px; font-weight: 700; color: #1A1712">2. Cuadros listos para colgar (restauración + impresión + envío a domicilio)</h3>
+<!-- Así quedan los cuadros (fotos de Fototeca, Claude) -->
+<div class="rf-galeria">
+  <figure>
+    <img src="img/cuadro-madera.webp" alt="Cuadro con marco color madera, con la foto restaurada de una familia en la mesa" width="600" height="800" loading="lazy">
+    <figcaption><b>Cuadro enmarcado (marco color madera)</b>Con vidrio, en 20x30 o 30x40. Para la pared o un mueble.</figcaption>
+  </figure>
+  <figure>
+    <img src="img/cuadro-negro.webp" alt="Cuadro con marco negro, con la foto restaurada de dos hermanos frente a una cascada" width="600" height="800" loading="lazy">
+    <figcaption><b>Cuadro enmarcado (marco negro)</b>Con vidrio, en 20x30 o 30x40. Sobrio y elegante.</figcaption>
+  </figure>
+  <figure>
+    <img src="img/cuadro-ecocuero.webp" alt="Cuadro de ecocuero sobre bastidor de madera, con la foto restaurada de un padre y su bebé" width="600" height="800" loading="lazy">
+    <figcaption><b>Ecocuero en bastidor (20x30 o 40x30)</b>La foto envuelve los bordes del bastidor de madera de 2 cm. Listo para colgar.</figcaption>
+  </figure>
+</div>
+<div class="rf-card-grid">
+  <div class="rf-card" data-prod-id="rf-cuadro-enmarcado-20x30" tabindex="0" role="button" aria-pressed="false">
+    <div>
+      <span class="rf-card-badge">Enmarcado</span>
+      <h4 style="margin: 8px 0 4px; font-size: 20px; font-weight: 700">Cuadro enmarcado 20x30</h4>
+      <p style="margin: 0; font-size: 14px; color: #5A5345">Marco color madera o negro, con vidrio y envío a domicilio.</p>
+    </div>
+    <div class="rf-card-precio" data-precio="rf-cuadro-enmarcado-20x30">$24.999</div>
+  </div>
+  <div class="rf-card" data-prod-id="rf-cuadro-enmarcado-30x40" tabindex="0" role="button" aria-pressed="false">
+    <div>
+      <span class="rf-card-badge">Enmarcado</span>
+      <h4 style="margin: 8px 0 4px; font-size: 20px; font-weight: 700">Cuadro enmarcado 30x40</h4>
+      <p style="margin: 0; font-size: 14px; color: #5A5345">Marco color madera o negro, con vidrio y envío a domicilio.</p>
+    </div>
+    <div class="rf-card-precio" data-precio="rf-cuadro-enmarcado-30x40">$29.999</div>
+  </div>
+  <div class="rf-card" data-prod-id="rf-cuadro-ecocuero-20x30" tabindex="0" role="button" aria-pressed="false">
+    <div>
+      <span class="rf-card-badge">Bastidor</span>
+      <h4 style="margin: 8px 0 4px; font-size: 20px; font-weight: 700">Ecocuero bastidor 20x30</h4>
+      <p style="margin: 0; font-size: 14px; color: #5A5345">Impresión en ecocuero sobre bastidor de madera + envío.</p>
+    </div>
+    <div class="rf-card-precio" data-precio="rf-cuadro-ecocuero-20x30">$34.999</div>
+  </div>
+  <div class="rf-card" data-prod-id="rf-cuadro-ecocuero-40x30" tabindex="0" role="button" aria-pressed="false">
+    <div>
+      <span class="rf-card-badge">Gran formato</span>
+      <h4 style="margin: 8px 0 4px; font-size: 20px; font-weight: 700">Ecocuero bastidor 40x30</h4>
+      <p style="margin: 0; font-size: 14px; color: #5A5345">Impresión en gran bastidor de madera + envío a domicilio.</p>
+    </div>
+    <div class="rf-card-precio" data-precio="rf-cuadro-ecocuero-40x30">$44.999</div>
+  </div>
+</div>
+<p style="margin: 12px 0 0; font-size: 17px; font-weight: 600; color: #1A1712">
+¿Otra medida? Comprá la restauración de 1 foto y coordinamos el formato y el envío por <a href="https://wa.me/5491155069569?text=Hola%2C%20quiero%20coordinar%20otra%20medida%20de%20cuadro" target="_blank" rel="noopener" style="color: #D7301F; font-weight: 700">WhatsApp</a>.
+</p>
+</div>
+
+<!-- Categoría: Combo -->
+<div>
+<h3 style="margin: 0 0 16px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 24px; font-weight: 700; color: #1A1712">3. El regalo completo</h3>
+<div class="rf-card destacado" data-prod-id="tc-combo" tabindex="0" role="button" aria-pressed="false" style="max-width: 600px">
+  <div>
+    <span class="rf-card-badge" style="background: #D7301F; color: #FFFFFF">Canción + Fotos</span>
+    <h4 style="margin: 8px 0 4px; font-size: 22px; font-weight: 800">Canción + video con fotos</h4>
+    <p style="margin: 0; font-size: 15px; color: #5A5345">Canción original personalizada con tu historia + video con hasta 20 fotos (3 de ellas restauradas). El regalo más emotivo.</p>
+  </div>
+  <div class="rf-card-precio" data-precio="tc-combo" style="color: #D7301F; margin-top: 10px">$59.999</div>
+</div>
+</div>
+
+<!-- FORMULARIO DINÁMICO DE PEDIDO -->
+<div id="formulario-pedido" class="rf-form-caja">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid #1A1712; padding-bottom: 16px">
+  <h3 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 28px; font-weight: 800; color: #1A1712">Completá tu pedido</h3>
+  <span id="rf-producto-resumen" style="font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 800; color: #D7301F">Restauración de 1 foto — <span data-precio="rf-foto-1">$4.999</span></span>
+</div>
+
+<form data-tienda-form enctype="multipart/form-data">
+  <!-- Campo oculto del producto seleccionado -->
+  <input type="hidden" name="producto" id="rf-producto" value="rf-foto-1">
+
+  <!-- Honeypot para bots -->
+  <input type="text" name="sitio_web" tabindex="-1" autocomplete="off" hidden>
+
+  <!-- Adjuntar fotos -->
+  <div class="form-grupo">
+    <label for="rf-fotos">
+      Adjuntar foto(s) <span style="color: #D7301F">*</span>
+      <span id="rf-fotos-info" style="font-size: 15px; font-weight: 400; color: #5A5345">(adjuntá 1 foto, máx. 15 MB)</span>
+    </label>
+    <input type="file" name="fotos" id="rf-fotos" accept="image/*,.heic,.heif" multiple required>
+    <div id="rf-fotos-preview"></div>
+  </div>
+
+  <!-- Preferencia de color -->
+  <fieldset id="rf-color" class="form-grupo" style="border: 0; margin: 0 0 20px; padding: 0; min-width: 0">
+    <legend style="padding: 0; margin-bottom: 8px; font-weight: 700">¿Cómo la querés?</legend>
+    <div class="modos">
+      <label class="modo"><input type="radio" name="color" value="Color" checked><img src="/tutienditaia/restauraciondefotos/img/modo-color.webp" alt="" width="360" height="270" loading="lazy"><span><b>A color</b><span class="modo-txt">Colores vivos y actuales, como una foto de hoy. Si es en blanco y negro, la coloreamos.</span></span></label>
+      <label class="modo"><input type="radio" name="color" value="Mantener colores de época"><img src="/tutienditaia/restauraciondefotos/img/modo-epoca.webp" alt="" width="360" height="270" loading="lazy"><span><b>Mantener colores de época</b><span class="modo-txt">La paleta apagada y los tonos sepia de las fotos de aquellos años: se nota que es de época.</span></span></label>
+      <label class="modo"><input type="radio" name="color" value="Blanco y negro"><img src="/tutienditaia/restauraciondefotos/img/modo-byn.webp" alt="" width="360" height="270" loading="lazy"><span><b>En blanco y negro</b><span class="modo-txt">Grises neutros con buen contraste, sin tono sepia. Si es a color, la pasamos a blanco y negro.</span></span></label>
+    </div>
+  </fieldset>
+
+  <!-- SECCIÓN CONDICIONAL: COLOR DEL MARCO (cuadro enmarcado) -->
+  <fieldset id="rf-seccion-marco" class="form-grupo" style="border: 0; margin: 0; padding: 0; min-width: 0" hidden>
+    <legend style="padding: 0; margin-bottom: 8px; font-weight: 700">Color del marco <span style="color: #D7301F">*</span></legend>
+    <div class="rf-marcos">
+      <label class="rf-marco"><input type="radio" name="marco" value="Madera" disabled><img src="img/cuadro-madera.webp" alt="" width="600" height="800" loading="lazy">Marco color madera</label>
+      <label class="rf-marco"><input type="radio" name="marco" value="Negro" disabled><img src="img/cuadro-negro.webp" alt="" width="600" height="800" loading="lazy">Marco negro</label>
+    </div>
+  </fieldset>
+
+  <!-- SECCIÓN CONDICIONAL: DIRECCIÓN DE ENVÍO (para cuadros) -->
+  <div id="rf-seccion-envio" class="seccion-borde" hidden>
+    <h4 style="margin: 0 0 16px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700; color: #1A1712">Dirección para el envío del cuadro</h4>
+    <div class="form-fila">
+      <div class="form-grupo">
+        <label for="envio_destinatario">Destinatario (opcional)</label>
+        <input type="text" name="envio_destinatario" id="envio_destinatario" placeholder="A quién se entrega (por defecto tu nombre)">
+      </div>
+      <div class="form-grupo">
+        <label for="envio_dni">DNI del destinatario <span style="color: #D7301F">*</span></label>
+        <input type="text" name="envio_dni" id="envio_dni" placeholder="Lo exige la mensajería">
+      </div>
+    </div>
+    <div class="form-fila">
+      <div class="form-grupo" style="flex: 2">
+        <label for="envio_calle">Calle <span style="color: #D7301F">*</span></label>
+        <input type="text" name="envio_calle" id="envio_calle" placeholder="Nombre de la calle o avenida">
+      </div>
+      <div class="form-grupo" style="flex: 1">
+        <label for="envio_numero">Número <span style="color: #D7301F">*</span></label>
+        <input type="text" name="envio_numero" id="envio_numero" placeholder="Ej: 1420">
+      </div>
+      <div class="form-grupo" style="flex: 1">
+        <label for="envio_piso">Piso / Depto (opcional)</label>
+        <input type="text" name="envio_piso" id="envio_piso" placeholder="Ej: 3 B">
+      </div>
+    </div>
+    <div class="form-fila">
+      <div class="form-grupo">
+        <label for="envio_localidad">Localidad / Barrio <span style="color: #D7301F">*</span></label>
+        <input type="text" name="envio_localidad" id="envio_localidad" placeholder="Ej: Avellaneda">
+      </div>
+      <div class="form-grupo">
+        <label for="envio_provincia">Provincia <span style="color: #D7301F">*</span></label>
+        <input type="text" name="envio_provincia" id="envio_provincia" placeholder="Ej: Buenos Aires">
+      </div>
+      <div class="form-grupo">
+        <label for="envio_cp">Código Postal <span style="color: #D7301F">*</span></label>
+        <input type="text" name="envio_cp" id="envio_cp" placeholder="Ej: 1870">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN CONDICIONAL: DATOS DE LA CANCIÓN (para tc-combo) -->
+  <div id="rf-seccion-combo" class="seccion-borde" hidden>
+    <h4 style="margin: 0 0 16px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700; color: #1A1712">Datos de la canción personalizada</h4>
+    <div class="form-fila">
+      <div class="form-grupo">
+        <label for="rf_para_quien">¿Para quién es la canción? <span style="color: #D7301F">*</span></label>
+        <input type="text" name="para_quien" id="rf_para_quien" placeholder="Nombre de la persona (y cómo le dicen)">
+      </div>
+      <div class="form-grupo">
+        <label for="rf_vinculo">Vínculo (opcional)</label>
+        <input type="text" name="vinculo" id="rf_vinculo" placeholder="Mamá, pareja, amiga, papá...">
+      </div>
+      <div class="form-grupo">
+        <label for="rf_ocasion">Ocasión (opcional)</label>
+        <input type="text" name="ocasion" id="rf_ocasion" placeholder="Cumpleaños, Día de la Madre, aniversario...">
+      </div>
+    </div>
+
+    <!-- Recordatorio de fecha (opcional) -->
+    <div class="bloque-recordatorio" style="margin: 16px 0 20px; padding: 14px 16px; background: #FBF9F5; border: 1px solid #E5E0D8; border-radius: 8px;">
+      <p style="margin: 0 0 10px; font-weight: 700; color: #1A1712; font-size: 15px">¿Te avisamos para la próxima? <span style="font-size: 13px; font-weight: normal; color: #666">(opcional)</span></p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 10px;">
+        <div class="form-grupo">
+          <label for="rf_fecha_tipo">Tipo de fecha</label>
+          <select name="fecha_tipo" id="rf_fecha_tipo">
+            <option value="">Elegí una opción</option>
+            <option value="Cumpleaños">Cumpleaños</option>
+            <option value="Aniversario">Aniversario</option>
+            <option value="Otra fecha">Otra fecha</option>
+          </select>
+        </div>
+        <div class="form-grupo" id="rf_caja_fecha_otra" hidden>
+          <label for="rf_fecha_otra">¿Cuál fecha?</label>
+          <input type="text" name="fecha_otra" id="rf_fecha_otra" maxlength="40" placeholder="Ej: Graduación, Aniversario...">
+        </div>
+        <div class="form-grupo">
+          <label>Día y mes</label>
+          <div style="display: flex; gap: 8px;">
+            <select name="fecha_dia" id="rf_fecha_dia" style="flex: 1; min-width: 0;">
+              <option value="">Día</option>
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+              <option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option>
+              <option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option>
+              <option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option>
+              <option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option>
+              <option value="31">31</option>
+            </select>
+            <select name="fecha_mes" id="rf_fecha_mes" style="flex: 2; min-width: 0;">
+              <option value="">Mes</option>
+              <option value="1">Enero</option>
+              <option value="2">Febrero</option>
+              <option value="3">Marzo</option>
+              <option value="4">Abril</option>
+              <option value="5">Mayo</option>
+              <option value="6">Junio</option>
+              <option value="7">Julio</option>
+              <option value="8">Agosto</option>
+              <option value="9">Septiembre</option>
+              <option value="10">Octubre</option>
+              <option value="11">Noviembre</option>
+              <option value="12">Diciembre</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div>
+        <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; line-height: 1.4; cursor: pointer; color: #1A1712;">
+          <input type="checkbox" name="fecha_permiso" id="rf_fecha_permiso" value="si" style="margin-top: 2px; accent-color: #D7301F; width: 16px; height: 16px; flex-shrink: 0;">
+          <span>Acepto que me escriban por mail o WhatsApp unos días antes de esa fecha para recordármela. Me puedo dar de baja cuando quiera.</span>
+        </label>
+        <p id="rf_fecha_aviso_permiso" style="display: none; color: #D7301F; font-size: 13px; font-weight: 700; margin: 6px 0 0 24px;">Para guardar la fecha necesitamos tu permiso.</p>
+      </div>
+    </div>
+
+    <div class="form-grupo">
+      <label>Estilo(s) musical(es) <span style="color: #D7301F">* (elegí al menos uno)</span></label>
+      <div class="checkbox-estilos">
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Balada"> Balada</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Pop"> Pop</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Cumbia"> Cumbia</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Cuarteto"> Cuarteto</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Folklore"> Folklore</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Rock nacional"> Rock nacional</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Bolero"> Bolero</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Tango"> Tango</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Reggaetón suave"> Reggaetón suave</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Infantil"> Infantil</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Acústico"> Acústico</label>
+        <label class="checkbox-estilo-item"><input type="checkbox" name="estilos" value="Otro" id="rf_estilo_otro_check"> Otro</label>
+      </div>
+    </div>
+
+    <div class="form-grupo" id="rf_caja_estilo_otro" hidden>
+      <label for="rf_estilo_otro">¿Cuál otro estilo?</label>
+      <input type="text" name="estilo_otro" id="rf_estilo_otro" placeholder="Ej: Vals, Bossa nova, Salsa...">
+    </div>
+
+    <div class="form-fila">
+      <div class="form-grupo">
+        <label>Voz deseada <span style="color: #D7301F">*</span></label>
+        <div style="display: flex; gap: 16px; margin-top: 6px">
+          <label style="display: flex; align-items: center; gap: 6px; font-weight: normal"><input type="radio" name="voz" value="Femenina" checked> Femenina</label>
+          <label style="display: flex; align-items: center; gap: 6px; font-weight: normal"><input type="radio" name="voz" value="Masculina"> Masculina</label>
+          <label style="display: flex; align-items: center; gap: 6px; font-weight: normal"><input type="radio" name="voz" value="Me da igual"> Me da igual</label>
+        </div>
+      </div>
+      <div class="form-grupo">
+        <label for="rf_duracion">Duración <span style="color: #D7301F">*</span></label>
+        <select name="duracion" id="rf_duracion">
+          <option value="Normal (unos 3 minutos)" selected>Normal (unos 3 minutos)</option>
+          <option value="Corta (unos 2 minutos)">Corta (unos 2 minutos)</option>
+          <option value="Larga (unos 4 minutos)">Larga (unos 4 minutos)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-grupo">
+      <label for="rf_inspiracion">Link de YouTube de inspiración (opcional)</label>
+      <input type="url" name="inspiracion" id="rf_inspiracion" placeholder="https://www.youtube.com/watch?v=...">
+    </div>
+
+    <div class="form-grupo">
+      <label for="rf_historia">La historia para la letra (mínimo 40 caracteres) <span style="color: #D7301F">*</span></label>
+      <textarea name="historia" id="rf_historia" rows="5" minlength="40" placeholder="De qué querés que hable la canción, datos de la persona, anécdotas compartidas, lugares, momentos importantes, frases típicas... ¡Cuanto más nos cuentes, mejor queda!"></textarea>
+    </div>
+
+    <div class="form-grupo">
+      <label for="rf_evitar">¿Hay algo que NO deba nombrarse? (opcional)</label>
+      <input type="text" name="evitar" id="rf_evitar" placeholder="Detalles, apodos o temas que preferís no mencionar">
+    </div>
+  </div>
+
+  <!-- Comentarios -->
+  <div class="form-grupo">
+    <label for="rf-comentarios">Comentarios o detalles especiales (opcional)</label>
+    <textarea name="comentarios" id="rf-comentarios" rows="3" placeholder="Si hay alguna persona puntual a resaltar o alguna indicación especial sobre la foto..."></textarea>
+  </div>
+
+  <!-- Datos de contacto -->
+  <div class="seccion-borde">
+    <h4 style="margin: 0 0 16px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700; color: #1A1712">Tus datos de contacto</h4>
+    <div class="form-fila">
+      <div class="form-grupo">
+        <label for="rf-nombre">Nombre y apellido <span style="color: #D7301F">*</span></label>
+        <input type="text" name="nombre" id="rf-nombre" required placeholder="Tu nombre completo">
+      </div>
+      <div class="form-grupo">
+        <label for="rf-email">Correo electrónico <span style="color: #D7301F">*</span></label>
+        <input type="email" name="email" id="rf-email" required placeholder="tu@email.com">
+      </div>
+      <div class="form-grupo">
+        <label for="rf-whatsapp">WhatsApp <span style="color: #D7301F">*</span></label>
+        <input type="tel" name="whatsapp" id="rf-whatsapp" required placeholder="Ej: 11 5506 9569 (con código de área)">
+      </div>
+    </div>
+  </div>
+
+  <!-- Acepto condiciones -->
+  <div style="margin: 24px 0 16px">
+    <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 16px; cursor: pointer">
+      <input type="checkbox" name="acepto" value="si" required style="accent-color: #D7301F; width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0">
+      <span>Acepto las <a href="#condiciones" style="font-weight: 700; text-decoration: underline">condiciones del servicio</a> y el uso de mis fotos para la realización del pedido.</span>
+    </label>
+  </div>
+
+  <!-- Caja de error y barra de progreso de tienda.js -->
+  <p data-tienda-error hidden></p>
+  <progress data-tienda-progreso hidden></progress>
+
+  <!-- Botón de compra -->
+  <div style="margin-top: 20px">
+    <button type="submit" class="boton-mp">Pagar con Mercado Pago</button>
+    <small class="texto-mp">Pago seguro con Mercado Pago. Te llevamos a su página para pagar.</small>
+  </div>
+</form>
+</div>
+</div>
+</section>
+
+<!-- LADO A: cruce hacia Tu Canción (Claude) -->
+<section style="background: #1E3C96; color: #FFFFFF; padding: 64px 24px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 48px">
+<div style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 14px; align-items: flex-start">
+<span style="background: #FFFFFF; color: #1E3C96; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 14px; padding: 6px 12px; border-radius: 999px">Lado A · Tu Canción</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(32px, 4.4vw, 48px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; color: #FFFFFF">Que además suene.</h2>
+<p style="margin: 0; font-size: 19px; line-height: 1.5; max-width: 34em; color: #DCE3FF">Convertimos su historia en una canción original, con su nombre y sus recuerdos. Ya publicamos más de 100 canciones hechas con IA. La escuchás antes de regalarla, y con estas fotos armamos el video.</p>
+</div>
+<a href="https://tucancion.com.ar/" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 30px; font-size: 20px; border-radius: 6px; background: #E0435C; color: #FFFFFF; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 700; text-decoration: none">Regalá una canción →</a>
+</div>
+</section>
+
+<!-- SECCIÓN CONDICIONES -->
+<section id="condiciones" style="background: #FFFFFF; border-top: 2px solid #1A1712; padding: 88px 24px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px">
+<div>
+  <h2 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(34px, 4.8vw, 52px); font-weight: 800; letter-spacing: -0.02em; color: #1A1712">Condiciones y garantías del servicio</h2>
+  <p style="margin: 0; font-size: 19px; color: #5A5345">Trabajamos con total transparencia para que compres con absoluta tranquilidad.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px 36px">
+  <div style="border-top: 2px solid #1A1712; padding-top: 16px">
+    <h3 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700">Vista previa en menos de 2 horas</h3>
+    <p style="margin: 0; font-size: 16px">Para la versión digital, a partir de la acreditación de tu pago en Mercado Pago.</p>
+  </div>
+  <div style="border-top: 2px solid #1A1712; padding-top: 16px">
+    <h3 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700">Vista previa antes de la entrega</h3>
+    <p style="margin: 0; font-size: 16px">Te mandamos la foto restaurada con marca de agua para que veas el resultado antes de recibir el archivo final.</p>
+  </div>
+  <div style="border-top: 2px solid #1A1712; padding-top: 16px">
+    <h3 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700">Corrección incluida</h3>
+    <p style="margin: 0; font-size: 16px">Las restauraciones de fotos incluyen 1 corrección para ajustar tonos o detalles. En canciones se incluyen hasta 5 cambios.</p>
+  </div>
+  <div style="border-top: 2px solid #1A1712; padding-top: 16px">
+    <h3 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700">Privacidad y resguardo</h3>
+    <p style="margin: 0; font-size: 16px">Tus fotos se borran automáticamente a los 30 días y nunca se publican en redes ni se muestran a terceros sin tu permiso explícito por escrito.</p>
+    <p style="margin: 8px 0 0; font-size: 16px">Recordatorios: solo si nos das permiso en el formulario. Guardamos el día y el mes (sin año), para quién es y tu contacto, y te podés dar de baja desde cualquier mensaje.</p>
+    <p style="margin: 8px 0 0; font-size: 16px">Usamos el píxel de Meta para saber qué anuncios funcionan. No le mandamos tus datos personales.</p>
+  </div>
+  <div style="border-top: 2px solid #1A1712; padding-top: 16px">
+    <h3 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700">Garantía por caras dañadas</h3>
+    <p style="margin: 0; font-size: 16px">Si la cara de la foto original está destruida y no se puede restaurar con fidelidad, te devolvemos el dinero.</p>
+  </div>
+  <div style="border-top: 2px solid #1A1712; padding-top: 16px">
+    <h3 style="margin: 0 0 8px; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: 22px; font-weight: 700">Canciones con IA y supervisión humana</h3>
+    <p style="margin: 0; font-size: 16px">Las canciones se crean con tecnología de inteligencia artificial y son revisadas y ajustadas minuciosamente por una persona.</p>
+  </div>
+</div>
+</div>
+</section>
+
+<section style="padding: 0 24px 88px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(34px, 4.8vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.02; color: #1A1712">Preguntas frecuentes</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px 48px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 20px; font-weight: 700">¿Llega para el Día de la Madre?</h3>
+<p style="margin: 0">La versión digital, sí: la vista previa te llega en menos de 2 horas y, cuando la aprobás, la final en el momento. Impresa o en cuadro depende del plazo de la mensajería; consultanos por WhatsApp antes de pedirla.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 20px; font-weight: 700">¿Y si la foto está muy rota?</h3>
+<p style="margin: 0">Mandánosla y te decimos si se puede recuperar. Si la cara está destruida no la hacemos, porque habría que inventarla, y te devolvemos el dinero.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 20px; font-weight: 700">¿Qué hacen con mis fotos?</h3>
+<p style="margin: 0">Las borramos a los 30 días y nunca las publicamos sin tu permiso por escrito.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 20px; font-weight: 700">¿No es lo mismo que pasarla por una app de IA?</h3>
+<p style="margin: 0">La app te puede devolver a otra persona (más joven, maquillada o con otros rasgos) y en un tamaño que muchas veces no alcanza para imprimir. Nosotros cuidamos las caras, investigamos los colores y te la damos lista para imprimir. <a href="#por-que" style="color: inherit">Mirá cómo</a>.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h3 style="margin: 0; font-size: 20px; font-weight: 700">¿Cómo se paga?</h3>
+<p style="margin: 0">Pagás de forma segura con Mercado Pago al hacer el pedido: dinero en cuenta, débito, crédito o efectivo (Rapipago / Pago Fácil). Una vez abonado, empezamos tu trabajo inmediatamente.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section style="background: #1A1712; color: #FFFAEB; padding: 88px 24px 48px">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; align-items: flex-start">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-size: clamp(38px, 6.4vw, 76px); font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: #FFD23F; max-width: 13em">Este Día de la Madre, devolvele esa foto.</h2>
+<a href="#precios" style="display: inline-flex; align-items: center; min-height: 56px; padding: 0 30px; font-size: 20px; border-radius: 6px; background: #D7301F; color: #FFFFFF; font-family: 'Bricolage Grotesque', 'Arial Narrow', sans-serif; font-weight: 700; text-decoration: none">Pedir restauración</a>
+<footer style="align-self: stretch; margin-top: 48px; padding-top: 28px; border-top: 2px solid #5A5345; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px">
+<img src="img/rf-logo-yema.svg" alt="Restauración de fotos" style="height: 34px; width: auto">
+<div style="display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 16px">
+<a href="https://tucancion.com.ar/" style="color: #FFFAEB">¿Y una canción con su historia? tucancion.com.ar</a>
+<span style="color: #C9BFA6">Sarandí, Avellaneda</span>
+</div>
+</footer>
+</div>
+</section>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var productosConfig = {
+    "rf-foto-1": { nombre: "Restauración de 1 foto", precio: "$4.999", maxFotos: 1, envio: false, cancion: false },
+    "rf-pack-5": { nombre: "Pack de 5 fotos", precio: "$14.999", maxFotos: 5, envio: false, cancion: false },
+    "rf-pack-10": { nombre: "Pack de 10 fotos", precio: "$24.999", maxFotos: 10, envio: false, cancion: false },
+    "rf-pack-20": { nombre: "Pack de 20 fotos", precio: "$39.999", maxFotos: 20, envio: false, cancion: false },
+    "rf-cuadro-enmarcado-20x30": { nombre: "Cuadro enmarcado 20x30", precio: "$24.999", maxFotos: 1, envio: true, cancion: false, marco: true },
+    "rf-cuadro-enmarcado-30x40": { nombre: "Cuadro enmarcado 30x40", precio: "$29.999", maxFotos: 1, envio: true, cancion: false, marco: true },
+    "rf-cuadro-ecocuero-20x30": { nombre: "Cuadro ecocuero bastidor 20x30", precio: "$34.999", maxFotos: 1, envio: true, cancion: false },
+    "rf-cuadro-ecocuero-40x30": { nombre: "Cuadro ecocuero bastidor 40x30", precio: "$44.999", maxFotos: 1, envio: true, cancion: false },
+    "tc-combo": { nombre: "Canción + video con fotos", precio: "$59.999", maxFotos: 20, envio: false, cancion: true }
+  };
+
+  var inputProducto = document.getElementById("rf-producto");
+  var inputFotos = document.getElementById("rf-fotos");
+  var labelFotosInfo = document.getElementById("rf-fotos-info");
+  var previewBox = document.getElementById("rf-fotos-preview");
+  var seccionEnvio = document.getElementById("rf-seccion-envio");
+  var seccionMarco = document.getElementById("rf-seccion-marco");
+  var seccionCombo = document.getElementById("rf-seccion-combo");
+  var resumenProd = document.getElementById("rf-producto-resumen");
+  var cards = document.querySelectorAll(".rf-card");
+  var estiloOtroCheck = document.getElementById("rf_estilo_otro_check");
+  var cajaEstiloOtro = document.getElementById("rf_caja_estilo_otro");
+
+  if (estiloOtroCheck && cajaEstiloOtro) {
+    estiloOtroCheck.addEventListener("change", function () {
+      cajaEstiloOtro.hidden = !estiloOtroCheck.checked;
+    });
+  }
+
+  // Recordatorio de fecha (combo)
+  var rfFechaTipo = document.getElementById("rf_fecha_tipo");
+  var rfCajaFechaOtra = document.getElementById("rf_caja_fecha_otra");
+  var rfFechaOtra = document.getElementById("rf_fecha_otra");
+  var rfFechaDia = document.getElementById("rf_fecha_dia");
+  var rfFechaMes = document.getElementById("rf_fecha_mes");
+  var rfFechaPermiso = document.getElementById("rf_fecha_permiso");
+  var rfAvisoPermiso = document.getElementById("rf_fecha_aviso_permiso");
+
+  function actualizarAvisoFechaRf() {
+    if (!rfAvisoPermiso) return;
+    var tieneFecha = !!((rfFechaTipo && rfFechaTipo.value) || (rfFechaDia && rfFechaDia.value) || (rfFechaMes && rfFechaMes.value) || (rfFechaOtra && rfFechaOtra.value.trim()));
+    var permiso = !!(rfFechaPermiso && rfFechaPermiso.checked);
+    rfAvisoPermiso.style.display = (tieneFecha && !permiso) ? "block" : "none";
+  }
+
+  if (rfFechaTipo && rfCajaFechaOtra) {
+    rfFechaTipo.addEventListener("change", function () {
+      rfCajaFechaOtra.hidden = rfFechaTipo.value !== "Otra fecha";
+      actualizarAvisoFechaRf();
+    });
+  }
+  if (rfFechaDia) rfFechaDia.addEventListener("change", actualizarAvisoFechaRf);
+  if (rfFechaMes) rfFechaMes.addEventListener("change", actualizarAvisoFechaRf);
+  if (rfFechaOtra) rfFechaOtra.addEventListener("input", actualizarAvisoFechaRf);
+  if (rfFechaPermiso) rfFechaPermiso.addEventListener("change", actualizarAvisoFechaRf);
+
+  function seleccionarProducto(id) {
+    var cfg = productosConfig[id];
+    if (!cfg) return;
+    inputProducto.value = id;
+    var precioCard = document.querySelector('.rf-card[data-prod-id="' + id + '"] .rf-card-precio');
+    // El resumen lleva el precio vigente (lo pinta tienda.js; el texto es el valor de arranque)
+    resumenProd.textContent = cfg.nombre + " — ";
+    var spanPrecio = document.createElement("span");
+    spanPrecio.setAttribute("data-precio", id);
+    spanPrecio.textContent = precioCard ? precioCard.textContent : cfg.precio;
+    resumenProd.appendChild(spanPrecio);
+    if (window.Tienda && window.Tienda.pintarPrecios) window.Tienda.pintarPrecios(resumenProd);
+
+    labelFotosInfo.textContent = "(adjuntá " + (cfg.maxFotos === 1 ? "1 foto" : "hasta " + cfg.maxFotos + " fotos") + ", máx. 15 MB por foto)";
+
+    // Color del marco (solo el enmarcado)
+    seccionMarco.hidden = !cfg.marco;
+    seccionMarco.querySelectorAll("input").forEach(function (inp) {
+      inp.required = !!cfg.marco;
+      inp.disabled = !cfg.marco;
+    });
+
+    // Configurar envío
+    if (cfg.envio) {
+      seccionEnvio.hidden = false;
+      seccionEnvio.querySelectorAll("input").forEach(function (inp) {
+        if (inp.name !== "envio_piso" && inp.name !== "envio_destinatario") {
+          inp.required = true;
+        }
+        inp.disabled = false;
+      });
+    } else {
+      seccionEnvio.hidden = true;
+      seccionEnvio.querySelectorAll("input").forEach(function (inp) {
+        inp.required = false;
+        inp.disabled = true;
+      });
+    }
+
+    // Configurar combo canción
+    if (cfg.cancion) {
+      seccionCombo.hidden = false;
+      seccionCombo.querySelectorAll("input, select, textarea").forEach(function (inp) {
+        if (inp.name === "para_quien" || inp.name === "historia" || inp.name === "duracion" || inp.name === "voz") {
+          inp.required = true;
+        }
+        inp.disabled = false;
+      });
+    } else {
+      seccionCombo.hidden = true;
+      seccionCombo.querySelectorAll("input, select, textarea").forEach(function (inp) {
+        inp.required = false;
+        inp.disabled = true;
+      });
+    }
+
+    // Actualizar estilo visual de las cards
+    cards.forEach(function (c) {
+      if (c.dataset.prodId === id) {
+        c.classList.add("seleccionado");
+        c.setAttribute("aria-pressed", "true");
+      } else {
+        c.classList.remove("seleccionado");
+        c.setAttribute("aria-pressed", "false");
+      }
+    });
+
+    validarYPrevisualizarFotos();
+  }
+
+  cards.forEach(function (c) {
+    c.addEventListener("click", function () {
+      var prodId = c.dataset.prodId;
+      if (prodId) {
+        seleccionarProducto(prodId);
+        document.getElementById("formulario-pedido").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    });
+    c.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        c.click();
+      }
+    });
+  });
+
+  function validarYPrevisualizarFotos() {
+    previewBox.innerHTML = "";
+    var cfg = productosConfig[inputProducto.value] || productosConfig["rf-foto-1"];
+    var files = Array.from(inputFotos.files || []);
+    if (files.length === 0) return;
+
+    if (files.length > cfg.maxFotos) {
+      alert("Seleccionaste " + files.length + " fotos, pero " + cfg.nombre + " permite como máximo " + cfg.maxFotos + " foto(s). Por favor seleccioná hasta " + cfg.maxFotos + ".");
+      inputFotos.value = "";
+      return;
+    }
+
+    var cont = document.createElement("div");
+    cont.className = "preview-contador";
+    cont.textContent = files.length + (files.length === 1 ? " foto seleccionada" : " fotos seleccionadas") + " (máximo " + cfg.maxFotos + ")";
+    previewBox.appendChild(cont);
+
+    var grid = document.createElement("div");
+    grid.className = "previews-grid";
+    files.forEach(function (f) {
+      var item = document.createElement("div");
+      item.className = "preview-item";
+      var img = document.createElement("img");
+      img.src = URL.createObjectURL(f);
+      img.alt = f.name;
+      img.onload = function () { URL.revokeObjectURL(this.src); };
+      var span = document.createElement("span");
+      span.textContent = f.name.length > 12 ? f.name.substring(0, 9) + "..." : f.name;
+      item.appendChild(img);
+      item.appendChild(span);
+      grid.appendChild(item);
+    });
+    previewBox.appendChild(grid);
+  }
+
+  inputFotos.addEventListener("change", validarYPrevisualizarFotos);
+
+  seleccionarProducto("rf-foto-1");
+
+  // Precios vigentes del servidor (los cuadros se ajustan solos si cambia el costo del proveedor)
+  fetch("/tutienditaia/api/catalogo?marca=rf").then(function (r) { return r.ok ? r.json() : null; }).then(function (c) {
+    if (!c) return;
+    c.productos.forEach(function (prod) {
+      var el = document.querySelector('.rf-card[data-prod-id="' + prod.id + '"] .rf-card-precio');
+      if (el) el.textContent = "$" + prod.precio.toLocaleString("es-AR");
+    });
+    seleccionarProducto(inputProducto.value);
+  }).catch(function () {});
+});
+</script>
+</body>
+</html>
